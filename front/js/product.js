@@ -54,3 +54,35 @@ addBasket.addEventListener("click", (e) => {
   } else {
     console.log("erreur");
   }
+
+  // Création de l'objet pour le local storage
+
+  let productId = id;
+  let productQuantity = inputBasket.value;
+  let productColor = colorBasket.value;
+
+  const obj = {
+    ID: productId,
+    Quantity: productQuantity,
+    Color: productColor,
+  };
+
+  // Enregistrement au local storage
+
+  let kanapStorage = JSON.parse(localStorage.getItem("dataProducts"));
+
+  // Si le local storage est vide, push pour ajouté les données de "obj"
+
+  if (kanapStorage == null) {
+    kanapStorage = [];
+    kanapStorage.push(obj);
+    localStorage.setItem("productUser", JSON.stringify(kanapStorage));
+  } else {
+    kanapStorage.push(obj);
+    localStorage.setItem("productUser", JSON.stringify(kanapStorage));
+
+    console.log(kanapStorage);
+  }
+});
+
+getProduct();
