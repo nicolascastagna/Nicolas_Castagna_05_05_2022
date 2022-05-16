@@ -4,7 +4,7 @@ let id = params.get("id");
 const newUrl = "http://localhost:3000/api/products/" + id;
 
 // Récupération des données de l'api et affichage du produit voulu
-function getProduct() {
+function getProduct(product) {
   fetch(newUrl)
     .then((res) => res.json())
     .then(function (id) {
@@ -33,56 +33,79 @@ function getProduct() {
         selectColors.appendChild(optionSelectors);
       }
     });
+  saveBasket(product);
 }
 
-// Déclaration des variables panier
-const input = document.getElementById("quantity");
+// Déclaration de la variable panier
+
 const addBasket = document.getElementById("addToCart");
+
+// Création d'une alerte lors de l'ajout d'un produit
+
+const alert = () => {
+  window.alert("Le produit a bien été ajouté au panier");
+};
 
 // Vérification si pris en compte les choix en couleur et le nombre
 
-addBasket.addEventListener("click", (e) => {
-  const colorBasket = document.getElementById("colors");
-  console.log(colorBasket.value);
-  if (colorBasket.value) {
-  } else {
-    console.log("pas de couleur selectionné");
-  }
-  const inputBasket = document.getElementById("quantity");
-  if (inputBasket.value > 0 && inputBasket.value <= 100) {
-    console.log(inputBasket.value);
-  } else {
-    console.log("erreur");
-  }
+function saveBasket(product) {
+  addBasket.addEventListener("click", (e) => {
+    const colorBasket = document.getElementById("colors");
+    const inputBasket = document.getElementById("quantity");
 
-  // Création de l'objet pour le local storage
+    if (
+      colorBasket.value !== "" &&
+      inputBasket.value != 0 &&
+      inputBasket.value <= 100
+    ) {
+      // Création de l'objet pour le local storage
 
-  let productId = id;
-  let productQuantity = inputBasket.value;
-  let productColor = colorBasket.value;
+      let productId = id;
+      let productQuantity = inputBasket.value;
+      let productColor = colorBasket.value;
 
-  const obj = {
-    ID: productId,
-    Quantity: productQuantity,
-    Color: productColor,
-  };
+      const obj = {
+        ID: productId,
+        Quantity: productQuantity,
+        Color: productColor,
+      };
 
-  // Enregistrement au local storage
+      // Transformation la chaine de caractères en données
+      let kanapStorage = JSON.parse(localStorage.getItem("productUser"));
 
-  let kanapStorage = JSON.parse(localStorage.getItem("dataProducts"));
+      // Condition s'il existe le même ID et couleur
 
-  // Si le local storage est vide, push pour ajouté les données de "obj"
+      if (kanapStorage) {
+        productBasket = kanapStorage.find(
+          (p) => p.ID === productId && p.Color === productColor
+        );
 
-  if (kanapStorage == null) {
-    kanapStorage = [];
-    kanapStorage.push(obj);
-    localStorage.setItem("productUser", JSON.stringify(kanapStorage));
-  } else {
-    kanapStorage.push(obj);
-    localStorage.setItem("productUser", JSON.stringify(kanapStorage));
+        // Incrémenter la quantité si même produit
 
-    console.log(kanapStorage);
-  }
-});
+        if (productBasket) {
+          let allQuantity =
+            parseInt(obj.Quantity) + parseInt(productBasket.Quantity);
+          productBasket.Quantity = allQuantity;
+          localStorage.setItem("productUser", JSON.stringify(kanapStorage));
+          alert();
+        }
 
+        // Si le produit est différent de l'id
+        else {
+          kanapStorage.push(obj);
+          localStorage.setItem("productUser", JSON.stringify(kanapStorage));
+          alert();
+        }
+      }
+
+      // Si le local storage est vide, ajout des données
+      else {
+        kanapStorage = [];
+        kanapStorage.push(obj);
+        localStorage.setItem("productUser", JSON.stringify(kanapStorage));
+        alert();
+      }
+    }
+  });
+}
 getProduct();
