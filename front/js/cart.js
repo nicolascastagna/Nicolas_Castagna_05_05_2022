@@ -219,3 +219,29 @@ inputs.forEach((input) => {
     }
   });
 });
+
+// Envoyer les informations dans un objet
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  if (
+    firstNameChecker() &&
+    lastNameChecker() &&
+    addressChecker() &&
+    cityChecker() &&
+    emailChecker()
+  ) {
+    const contact = {
+      firstName: document.getElementById("firstName").value,
+      lastName: document.getElementById("lastName").value,
+      address: document.getElementById("address").value,
+      city: document.getElementById("city").value,
+      email: document.getElementById("email").value,
+    };
+    // Redirection vers la page de confirmation
+    // window.location href
+  } else {
+    alert("Veuillez remplir correctement les champs");
+  }
+});
