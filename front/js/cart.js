@@ -109,3 +109,113 @@ async function basketDisplay() {
   }
   changeBasket();
 }
+
+//---------------------------------------------
+
+// Comportement lors du formulaire de commande
+
+// Regex prénom/nom : (/^[a-zA-Z0-9_.-]*$/)
+// Regex mail : (/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/i)
+
+const inputs = document.querySelectorAll(
+  'input[type="text"], input[type="email"]'
+);
+const form = document.querySelector("form");
+
+const firstNameChecker = (value) => {
+  console.log(value);
+  const errorFirstName = document.getElementById("firstNameErrorMsg");
+  if (value.length > 0 && (value.length < 3 || value.length > 20)) {
+    errorFirstName.textContent =
+      "Le prénom doit faire entre 3 et 20 caractères";
+    return false;
+  } else if (!value.match(/^[a-zA-Z0-9_.-]*$/)) {
+    errorFirstName.textContent =
+      "Le prénom ne doit pas contenir de caractères spéciaux";
+    return false;
+  } else {
+    errorFirstName.textContent = "";
+    return true;
+  }
+};
+const lastNameChecker = (value) => {
+  console.log(value);
+  const errorLastName = document.getElementById("lastNameErrorMsg");
+  if (value.length > 0 && (value.length < 3 || value.length > 20)) {
+    errorLastName.textContent = "Le nom doit faire entre 3 et 20 caractères";
+  } else if (!value.match(/^[a-zA-Z0-9_.-]*$/)) {
+    errorLastName.textContent =
+      "Le nom ne doit pas contenir de caractères spéciaux";
+  } else {
+    errorLastName.textContent = "";
+  }
+};
+const addressChecker = (value) => {
+  console.log(value);
+  const errorAddress = document.getElementById("addressErrorMsg");
+  if (value.length === 0) {
+    errorAddress.textContent =
+      "Ce champ est obligatoire (vous ne pouvez pas le laisser vide)";
+  } else if (!value.match(/^[a-zA-Z0-9_.-]*$/)) {
+    errorAddress.textContent =
+      "L'adresse ne doit pas contenir de caractères spéciaux";
+  } else {
+    errorAddress.textContent = "";
+  }
+};
+const cityChecker = (value) => {
+  console.log(value);
+  const errorCity = document.getElementById("cityErrorMsg");
+  if (value.length === 0) {
+    errorCity.textContent =
+      "Ce champ est obligatoire (vous ne pouvez pas le laisser vide";
+  } else if (!value.match(/^[a-zA-Z0-9_.-]*$/)) {
+    errorCity.textContent =
+      "La ville ne doit pas contenir de caractères spéciaux";
+  } else {
+    errorCity.textContent = "";
+  }
+};
+const emailChecker = (value) => {
+  console.log(value);
+  const errorEmail = document.getElementById("emailErrorMsg");
+  if (value.length === 0) {
+    errorEmail.textContent =
+      "Ce champ est obligatoire (vous ne pouvez pas le laisser vide)";
+  } else if (!value.match(/^[\w_-]+@[\w-]+\.[a-z]{2,8}$/i)) {
+    errorEmail.textContent = "L'adresse mail n'est pas valide";
+  } else {
+    errorEmail.textContent = "";
+  }
+};
+const confirmChecker = (value) => {
+  console.log(value);
+};
+
+inputs.forEach((input) => {
+  input.addEventListener("input", (e) => {
+    // Test la valeur des inputs
+    switch (e.target.id) {
+      case "firstName":
+        firstNameChecker(e.target.value);
+        break;
+      case "lastName":
+        lastNameChecker(e.target.value);
+        break;
+      case "address":
+        addressChecker(e.target.value);
+        break;
+      case "city":
+        cityChecker(e.target.value);
+        break;
+      case "email":
+        emailChecker(e.target.value);
+        break;
+      case "submit":
+        confirmChecker(e.target.value);
+        break;
+      default:
+        nul;
+    }
+  });
+});
