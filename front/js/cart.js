@@ -110,12 +110,24 @@ async function basketDisplay() {
   changeBasket();
 }
 
+// Comportement lors du changement de quantité
+
+function changeBasket(product) {
+  const inputBasket = document.querySelectorAll(".itemQuantity");
+  for (let input of inputBasket) {
+    input.addEventListener("change", (e) => {
+      console.log(e.target.value);
+    });
+  }
+}
+basketDisplay();
+
 //---------------------------------------------
 
 // Comportement lors du formulaire de commande
 
 // Regex prénom/nom : (/^[a-zA-Z0-9_.-]*$/)
-// Regex mail : (/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/i)
+// Regex mail : (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i)
 
 const inputs = document.querySelectorAll(
   'input[type="text"], input[type="email"]'
@@ -129,7 +141,9 @@ const firstNameChecker = (value) => {
     errorFirstName.textContent =
       "Le prénom doit faire entre 3 et 20 caractères";
     return false;
-  } else if (!value.match(/^[a-zA-Z0-9_.-]*$/)) {
+  } else if (
+    !value.match(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/)
+  ) {
     errorFirstName.textContent =
       "Le prénom ne doit pas contenir de caractères spéciaux";
     return false;
@@ -146,8 +160,10 @@ const lastNameChecker = (value) => {
   } else if (!value.match(/^[a-zA-Z0-9_.-]*$/)) {
     errorLastName.textContent =
       "Le nom ne doit pas contenir de caractères spéciaux";
+    return false;
   } else {
     errorLastName.textContent = "";
+    return true;
   }
 };
 const addressChecker = (value) => {
@@ -156,11 +172,13 @@ const addressChecker = (value) => {
   if (value.length === 0) {
     errorAddress.textContent =
       "Ce champ est obligatoire (vous ne pouvez pas le laisser vide)";
-  } else if (!value.match(/^[a-zA-Z0-9_.-]*$/)) {
+  } else if (!value.match(/^[a-zA-Z0-9\s,'-]*$/)) {
     errorAddress.textContent =
       "L'adresse ne doit pas contenir de caractères spéciaux";
+    return false;
   } else {
     errorAddress.textContent = "";
+    return true;
   }
 };
 const cityChecker = (value) => {
@@ -172,8 +190,10 @@ const cityChecker = (value) => {
   } else if (!value.match(/^[a-zA-Z0-9_.-]*$/)) {
     errorCity.textContent =
       "La ville ne doit pas contenir de caractères spéciaux";
+    return false;
   } else {
     errorCity.textContent = "";
+    return true;
   }
 };
 const emailChecker = (value) => {
@@ -182,10 +202,12 @@ const emailChecker = (value) => {
   if (value.length === 0) {
     errorEmail.textContent =
       "Ce champ est obligatoire (vous ne pouvez pas le laisser vide)";
-  } else if (!value.match(/^[\w_-]+@[\w-]+\.[a-z]{2,8}$/i)) {
+  } else if (!value.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i)) {
     errorEmail.textContent = "L'adresse mail n'est pas valide";
+    return false;
   } else {
     errorEmail.textContent = "";
+    return true;
   }
 };
 const confirmChecker = (value) => {
@@ -226,11 +248,11 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
 
   if (
-    firstNameChecker() &&
-    lastNameChecker() &&
-    addressChecker() &&
-    cityChecker() &&
-    emailChecker()
+    firstNameChecker &&
+    lastNameChecker &&
+    addressChecker &&
+    cityChecker &&
+    emailChecker
   ) {
     const contact = {
       firstName: document.getElementById("firstName").value,
@@ -240,7 +262,7 @@ form.addEventListener("submit", (e) => {
       email: document.getElementById("email").value,
     };
     // Redirection vers la page de confirmation
-    // window.location href
+    form.href = `./cart.html?id=${basket._id}`;
   } else {
     alert("Veuillez remplir correctement les champs");
   }
