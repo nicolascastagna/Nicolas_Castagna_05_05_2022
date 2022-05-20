@@ -15,7 +15,6 @@ async function fetchBasket(id) {
   console.log(baskets);
   return basket;
 }
-
 // Conditions si le panier est vide
 async function basketDisplay() {
   await fetchBasket();
@@ -107,6 +106,7 @@ async function basketDisplay() {
     }
   }
   changeBasket();
+  deleteBasket();
 }
 
 // Modification de la quantité entre le panier et local storage
@@ -125,14 +125,29 @@ function changeBasket(product) {
     });
   }
 }
-
+// Supression d'un produit au panier et modifie le local storage
+function deleteBasket() {
+  const delBasket = document.querySelectorAll(".deleteItem");
+  for (let i = 0; i < delBasket.length; i++) {
+    delBasket[i].addEventListener("click", (e) => {
+      e.preventDefault();
+      if (window.confirm("Voulez-vous supprimer ce produit ?")) {
+        addProduct = addProduct.filter(
+          (el) => el.ID !== addProduct[i].ID || el.Color !== addProduct[i].Color
+        );
+        localStorage.setItem("productUser", JSON.stringify(addProduct));
+        location.reload();
+      }
+    });
+  }
+}
 basketDisplay();
 
 //---------------------------------------------
 
 // Comportement lors du formulaire de commande
 
-// Regex prénom/nom : (/^[a-zA-Z0-9_.-]*$/)
+// Regex prénom/nom : (/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/)
 // Regex mail : (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i)
 
 const inputs = document.querySelectorAll(
