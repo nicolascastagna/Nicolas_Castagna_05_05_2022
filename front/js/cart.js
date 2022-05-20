@@ -1,7 +1,6 @@
 // Récupération des données du local storage
 let addProduct = JSON.parse(localStorage.getItem("productUser"));
 const apiUrl = "http://localhost:3000/api/products/";
-let basketProduct;
 let basket;
 
 // Récupération des informations complémentaires au localstorage
@@ -110,16 +109,23 @@ async function basketDisplay() {
   changeBasket();
 }
 
-// Comportement lors du changement de quantité
+// Modification de la quantité entre le panier et local storage
 
 function changeBasket(product) {
   const inputBasket = document.querySelectorAll(".itemQuantity");
-  for (let input of inputBasket) {
-    input.addEventListener("change", (e) => {
-      console.log(e.target.value);
+  for (let i = 0; i < inputBasket.length; i++) {
+    inputBasket[i].addEventListener("change", (e) => {
+      addProduct[i].Quantity = e.target.value;
+      if (addProduct[i].Quantity == 0 || addProduct.Quantity > 100) {
+        alert("Merci de choisir une quantité entre 1 et 100");
+        location.reload();
+      } else {
+        localStorage.setItem("productUser", JSON.stringify(addProduct));
+      }
     });
   }
 }
+
 basketDisplay();
 
 //---------------------------------------------
@@ -157,7 +163,9 @@ const lastNameChecker = (value) => {
   const errorLastName = document.getElementById("lastNameErrorMsg");
   if (value.length > 0 && (value.length < 3 || value.length > 20)) {
     errorLastName.textContent = "Le nom doit faire entre 3 et 20 caractères";
-  } else if (!value.match(/^[a-zA-Z0-9_.-]*$/)) {
+  } else if (
+    !value.match(/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/)
+  ) {
     errorLastName.textContent =
       "Le nom ne doit pas contenir de caractères spéciaux";
     return false;
