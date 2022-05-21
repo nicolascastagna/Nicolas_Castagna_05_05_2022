@@ -107,6 +107,7 @@ async function basketDisplay() {
   }
   changeBasket();
   deleteBasket();
+  getTotal();
 }
 
 // Modification de la quantité entre le panier et local storage
@@ -131,7 +132,7 @@ function deleteBasket() {
   for (let i = 0; i < delBasket.length; i++) {
     delBasket[i].addEventListener("click", (e) => {
       e.preventDefault();
-      if (window.confirm("Voulez-vous supprimer ce produit ?")) {
+      if (window.confirm("Voulez-vous vraiment supprimer ce produit ?")) {
         addProduct = addProduct.filter(
           (el) => el.ID !== addProduct[i].ID || el.Color !== addProduct[i].Color
         );
@@ -141,6 +142,28 @@ function deleteBasket() {
     });
   }
 }
+
+// Obtenir le total des produits
+
+function getTotal() {
+  // Calcul de la quantité
+  const getQuantity = document.getElementsByClassName("itemQuantity");
+  const totalCountDisplay = document.getElementById("totalQuantity");
+  totalCount = 0;
+  for (let i = 0; i < getQuantity.length; i++) {
+    totalCount += getQuantity[i].valueAsNumber;
+    totalCountDisplay.textContent = totalCount;
+  }
+
+  // Calcul du prix
+  const getPriceDisplay = document.getElementById("totalPrice");
+  let totalPrice = 0;
+  for (let i = 0; i < getQuantity.length; i++) {
+    totalPrice += getQuantity[i].valueAsNumber * baskets.price;
+    getPriceDisplay.textContent = totalPrice;
+  }
+}
+
 basketDisplay();
 
 //---------------------------------------------
@@ -284,6 +307,9 @@ form.addEventListener("submit", (e) => {
       city: document.getElementById("city").value,
       email: document.getElementById("email").value,
     };
+
+    // Vide le formulaire lors de la validation de commande
+    inputs.forEach((input) => (input.value = ""));
     // Redirection vers la page de confirmation
     form.href = `./cart.html?id=${basket._id}`;
   } else {
