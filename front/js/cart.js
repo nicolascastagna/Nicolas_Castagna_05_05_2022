@@ -288,10 +288,16 @@ inputs.forEach((input) => {
   });
 });
 
-// Envoyer les informations dans un objet
+// Envoyer les informations dans un objet contact
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+  // Création d'un array et récupération des ID produits
+  const IdProduct = JSON.parse(localStorage.getItem("productUser"));
+  let productsCart = [];
+  for (i = 0; i < addProduct.length; i++) {
+    productsCart.push(addProduct[i].ID);
+  }
 
   if (
     firstNameChecker &&
@@ -300,18 +306,39 @@ form.addEventListener("submit", (e) => {
     cityChecker &&
     emailChecker
   ) {
-    const contact = {
-      firstName: document.getElementById("firstName").value,
-      lastName: document.getElementById("lastName").value,
-      address: document.getElementById("address").value,
-      city: document.getElementById("city").value,
-      email: document.getElementById("email").value,
+    const orderContact = {
+      contact: {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        address: document.getElementById("address").value,
+        city: document.getElementById("city").value,
+        email: document.getElementById("email").value,
+      },
+      products: productsCart,
+    };
+
+    const settings = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderContact),
+      mode: "cors",
+      credentials: "same-origin",
     };
 
     // Vide le formulaire lors de la validation de commande
     inputs.forEach((input) => (input.value = ""));
-    // Redirection vers la page de confirmation
-    form.href = `./cart.html?id=${basket._id}`;
+
+    // Reqûete POST sur l'API et récupérer l'identifiant de commande
+    fetch("http://localhost:3000/api/products/order", settings)
+      .then((res) => res.json())
+      .then((data) => {
+        document.location.href = "confirmation.html?id=" + data.orderId;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   } else {
     alert("Veuillez remplir correctement les champs");
   }
