@@ -293,7 +293,6 @@ inputs.forEach((input) => {
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   // Création d'un array et récupération des ID produits
-  const IdProduct = JSON.parse(localStorage.getItem("productUser"));
   let productsCart = [];
   for (i = 0; i < addProduct.length; i++) {
     productsCart.push(addProduct[i].ID);
