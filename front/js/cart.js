@@ -4,7 +4,7 @@ const apiUrl = "http://localhost:3000/api/products/";
 let basket;
 
 // Récupération des informations complémentaires au localstorage
-async function fetchBasket(id) {
+async function fetchBasket() {
   await fetch(apiUrl)
     .then((data) => data.json())
     .then(function (data) {
@@ -28,6 +28,7 @@ async function basketDisplay() {
   // Afficher les produits du localstorage au panier
   else {
     for (let product in addProduct) {
+      // Récupère les informations complémentaires des ID associé au localStorage (prix, nom...)
       baskets = basket.find((d) => d._id === addProduct[product].ID);
       // création de l'article
       let basketArticle = document.createElement("article");
@@ -112,17 +113,17 @@ async function basketDisplay() {
 
 // Modification de la quantité entre le panier et local storage
 
-function changeBasket(product) {
+function changeBasket() {
   const inputBasket = document.querySelectorAll(".itemQuantity");
   for (let i = 0; i < inputBasket.length; i++) {
     inputBasket[i].addEventListener("change", (e) => {
       addProduct[i].Quantity = e.target.value;
       if (addProduct[i].Quantity == 0 || addProduct.Quantity > 100) {
         alert("Merci de choisir une quantité entre 1 et 100");
-        location.reload();
       } else {
         localStorage.setItem("productUser", JSON.stringify(addProduct));
       }
+      location.reload();
     });
   }
 }
@@ -169,9 +170,6 @@ basketDisplay();
 //---------------------------------------------
 
 // Comportement lors du formulaire de commande
-
-// Regex prénom/nom : (/^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/)
-// Regex mail : (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i)
 
 const inputs = document.querySelectorAll(
   'input[type="text"], input[type="email"]'
@@ -262,7 +260,7 @@ const confirmChecker = (value) => {
 
 inputs.forEach((input) => {
   input.addEventListener("input", (e) => {
-    // Test la valeur des inputs
+    // Récupère la valeur des inputs
     switch (e.target.id) {
       case "firstName":
         firstNameChecker(e.target.value);
@@ -297,7 +295,7 @@ form.addEventListener("submit", (e) => {
   for (i = 0; i < addProduct.length; i++) {
     productsCart.push(addProduct[i].ID);
   }
-
+  // Condtions si toutes les informations du formulaire sont corrects
   if (
     firstNameChecker &&
     lastNameChecker &&

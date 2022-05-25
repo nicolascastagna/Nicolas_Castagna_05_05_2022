@@ -23,7 +23,7 @@ function getProduct(product) {
       productPrice.innerHTML = id.price;
 
       const productDescription = document.getElementById("description");
-      productDescription.innerHTML += id.description;
+      productDescription.innerHTML = id.description;
 
       for (let color of id.colors) {
         const selectColors = document.getElementById("colors");
@@ -53,12 +53,13 @@ function saveBasket(product) {
     const colorBasket = document.getElementById("colors");
     const inputBasket = document.getElementById("quantity");
 
+    // Conditions si les champs ont été renseignés
     if (
       colorBasket.value !== "" &&
       inputBasket.value != 0 &&
       inputBasket.value <= 100
     ) {
-      // Création de l'objet pour le local storage
+      // Stockage de la personnalisation et Création de l'objet pour le local storage
 
       let productId = id;
       let productQuantity = inputBasket.value;
@@ -73,7 +74,7 @@ function saveBasket(product) {
       // Transformation la chaine de caractères en données
       let kanapStorage = JSON.parse(localStorage.getItem("productUser"));
 
-      // Condition s'il existe le même ID et couleur
+      // Condition s'il existe le même ID et couleur pour eviter duplication
 
       if (kanapStorage) {
         productBasket = kanapStorage.find(
